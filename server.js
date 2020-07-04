@@ -24,7 +24,7 @@ app.get("*", (req, res) => {
 
 // Connect to the Mongo DB
 mongoose.connect(
-  process.env.MONGODB_URI || "mongodb://localhost/googleBooks",
+  process.env.MONGODB_URI || "mongodb://shash833:password123@ds145312.mlab.com:45312/heroku_kq0m0hqv",
   { useUnifiedTopology: true, useNewUrlParser: true, useCreateIndex: true }
 );
 
