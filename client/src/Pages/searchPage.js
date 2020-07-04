@@ -1,5 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import Container from "../Components/Container"
+import Column from "../Components/Column"
+import Image from "../Components/Image"
+import Row from "../Components/Row"
 import Heading from "../Components/Jumbotron"
 import Card from "../Components/Card"
 import Title from "../Components/Title"
@@ -8,7 +11,8 @@ import Input from "../Components/TextInput"
 import Button from "../Components/Button"
 import List from "../Components/ListGroup"
 import ListItem from "../Components/ListItem"
-import API from "../utils/API";
+import GoogleBooksAPI from "../utils/GoogleBooksAPI";
+import BooksDB from "../utils/DB"
 
 
 function BookSearch() {
@@ -19,9 +23,10 @@ function BookSearch() {
     const [searchResults, setSearchResults] = useState([])
 
     //When user searches for a book, make API call and set results into 'searchResults' state
-    const handleInput = async () => {
+    const handleInput = async (event) => {
         try {
-            const { data: { items } } = await API.search(search)
+            event.preventDefault()
+            const { data: { items } } = await GoogleBooksAPI.search(search)
             if (items.length > 0) {
                 setSearchResults(items)
             }
@@ -31,34 +36,56 @@ function BookSearch() {
         }
     };
 
-    useEffect(() => {
-        console.log("state", searchResults)
-    }, [searchResults]);
-
+    //Save chosen book info to DB
+    async function saveBook({ title, author, description, image, link }) {
+        try {
+            BooksDB.saveBook({
+                title: title,
+                author: author,
+                description: description,
+                image: image,
+                link: link
+            })
+        }
+        catch (error) {
+            console.log(error)
+        }
+    }
 
     return <Container>
         <Heading />
         <Card>
-            <Title>Book Search</Title>
-            <Form>
-                <Input label={"Book:"} placeholder={"Enter the book you want to search"} onChange={e => setSearch(e.target.value)} />
+            <Title>Book Search:</Title>
+            <Form onSubmit={e => handleInput(e)}>
+                <Input placeholder={"Enter the book you want to search for"} onChange={e => setSearch(e.target.value)} />
                 <Button variant={"dark"} type={"submit"} onClick={handleInput}>Search</Button>
             </Form>
         </Card>
-        {searchResults.length > 1 ?
-            <Card>
-                <Title>Search Results for "{search}":</Title>
-                <List>
-                    {searchResults.map(({ id, volumeInfo: { title, authors, description, imageLinks } }) => (
-                        <ListItem key={id}
-                            title={title}
-                            author={authors}
-                            blurb={description}
-                            image={imageLinks === undefined ? "https://voice.global/wp-content/plugins/wbb-publications/public/assets/img/placeholder.jpg" : imageLinks.thumbnail} />
-                    ))}
-                </List>
-            </Card>
-            : false}
+        {searchResults.length ? <Title>Search Results:</Title> : false}
+        <List>
+            {searchResults.map(({ id, volumeInfo: { title, authors, infoLink, description, imageLinks } }) => (
+                <ListItem key={id}>
+                    <Row>
+                        <Column size={10}>
+                            <h3>{title}</h3>
+                            <h4>{authors === undefined ? "No authors listed" : authors.join(", ")}</h4>
+                        </Column>
+                        <Column size={2}>
+                            <Button variant={"secondary"} onClick={() => saveBook({ title: title, author: (authors === undefined ? ["No authors listed"] : authors), description: (description === undefined ? "No summary provided" : description), image: (imageLinks === undefined ? "https://voice.global/wp-content/plugins/wbb-publications/public/assets/img/placeholder.jpg" : imageLinks.thumbnail), link: infoLink })}>Save Book</Button>
+                        </Column>
+                    </Row>
+                    <Row>
+                        <Column size={2}>
+                            <Image src={imageLinks === undefined ? "https://voice.global/wp-content/plugins/wbb-publications/public/assets/img/placeholder.jpg" : imageLinks.thumbnail} />
+                        </Column>
+                        <Column size={10}>
+                            <p>{description}</p>
+                            <p><b>Link: </b><a href={infoLink}>{infoLink}</a></p>
+                        </Column>
+                    </Row>
+                </ListItem>
+            ))}
+        </List>
 
     </Container>;
 }

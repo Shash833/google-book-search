@@ -1,8 +1,9 @@
 import React from "react";
 import { Nav, Navbar } from 'react-bootstrap'
+import "./style.css"
 
 function Navigation() {
-    return <Navbar bg="light" expand="lg">
+    return <Navbar expand="lg" sticky="top">
         <Navbar.Brand>Google Books</Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
