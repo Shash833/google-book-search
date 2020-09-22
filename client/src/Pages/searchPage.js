@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Link } from 'react-router-dom'
 import Container from "../Components/Container"
 import Column from "../Components/Column"
 import Image from "../Components/Image"
@@ -28,6 +29,7 @@ function BookSearch() {
             event.preventDefault()
             const { data: { items } } = await GoogleBooksAPI.search(search)
             if (items.length > 0) {
+                // console.log(items)
                 setSearchResults(items)
             }
         }
@@ -66,12 +68,21 @@ function BookSearch() {
             {searchResults.map(({ id, volumeInfo: { title, authors, infoLink, description, imageLinks } }) => (
                 <ListItem key={id}>
                     <Row>
-                        <Column size={10}>
+                        <Column size={6}>
                             <h3>{title}</h3>
                             <h4>{authors === undefined ? "No authors listed" : authors.join(", ")}</h4>
                         </Column>
-                        <Column size={2}>
-                            <Button variant={"secondary"} onClick={() => saveBook({ title: title, author: (authors === undefined ? ["No authors listed"] : authors), description: (description === undefined ? "No summary provided" : description), image: (imageLinks === undefined ? "https://voice.global/wp-content/plugins/wbb-publications/public/assets/img/placeholder.jpg" : imageLinks.thumbnail), link: infoLink })}>Save Book</Button>
+                        <Column size={"auto"}>
+                            <Button variant={"secondary"}
+                                onClick={() => saveBook(
+                                    {
+                                        title: title,
+                                        author: (authors === undefined ? ["No authors listed"] : authors),
+                                        description: (description === undefined ? "No summary provided" : description), image: (imageLinks === undefined ? "https://voice.global/wp-content/plugins/wbb-publications/public/assets/img/placeholder.jpg" : imageLinks.thumbnail), link: infoLink
+                                    })}>
+                                Save Book
+                            </Button>
+                            <Link to={`/book/${id}`}><Button >View Book</Button></Link>
                         </Column>
                     </Row>
                     <Row>
