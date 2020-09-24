@@ -13,8 +13,8 @@ function bookPage({ match }) {
 
     async function retreiveInfo(id) {
         try {
-            const { data } = await GoogleBooksAPI.select(id)
-            setBookInfo(data)
+            const { data: { items } } = await GoogleBooksAPI.search(id)
+            setBookInfo(items[0])
             // setSaved(data)
         }
         catch (error) { console.log(error) }

@@ -25,7 +25,7 @@ module.exports = {
     catch (error) { res.status(422).json(error) }
   },
 
-  //Method to delete a book with unique ID identifier
+  //Method to delete a book with unique ID
   remove: async function (req, res) {
     try {
       const _id = req.params.id

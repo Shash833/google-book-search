@@ -90,7 +90,7 @@ function BookSearch() {
                             <Image src={imageLinks === undefined ? "https://voice.global/wp-content/plugins/wbb-publications/public/assets/img/placeholder.jpg" : imageLinks.thumbnail} />
                         </Column>
                         <Column size={10}>
-                            <p>{description}</p>
+                            <p>{description.substring(0, 400)}{description.length > 400 ? "..." : null}</p>
                             <p><b>Link: </b><a href={infoLink}>{infoLink}</a></p>
                         </Column>
                     </Row>
