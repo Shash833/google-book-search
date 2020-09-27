@@ -12,5 +12,20 @@ export default {
 
     saveBook: function (bookData) {
         return axios.post("/api/books", bookData);
+    },
+
+    register: function ({ name, username, password }) {
+        return axios.post("/register", {
+            name: name,
+            username: username,
+            password: password
+        })
+    },
+
+    login: function ({ username, password }) {
+        return axios.post("/login", {
+            username: username,
+            password: password
+        })
     }
 };

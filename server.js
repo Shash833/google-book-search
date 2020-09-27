@@ -39,14 +39,14 @@ app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname, "./client/build/index.html"));
 });
 
-// Connect to the Mongo DB
-mongoose.connect(
-  process.env.MONGODB_URI || "mongodb://shash833:password123@ds145312.mlab.com:45312/heroku_kq0m0hqv",
-  { useUnifiedTopology: true, useNewUrlParser: true, useCreateIndex: true }
-);
+// // Connect to the Mongo DB
+// mongoose.connect(
+//   process.env.MONGODB_URI || "mongodb://shash833:password123@ds145312.mlab.com:45312/heroku_kq0m0hqv",
+//   { useUnifiedTopology: true, useNewUrlParser: true, useCreateIndex: true }
+// );
 
 //Local MongoDB
-// mongoose.connect(process.env.MONGODB_URI || "mongodb://localhost/googleBooks", { useNewUrlParser: true });
+mongoose.connect(process.env.MONGODB_URI || "mongodb://localhost/googleBooks", { useNewUrlParser: true });
 
 app.listen(PORT, () => {
   console.log(`🌎 ==> API server now on port ${PORT}!`);
