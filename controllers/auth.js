@@ -8,16 +8,16 @@ module.exports = {
             User.register(new User({ username, name }), password)
             res.redirect('/login')
         }
-        catch (error) { console.log(error) }
+        catch (error) { res.status(422).json(error) }
     },
     //To log in:
-    doLogin: function (req, res) {
+    doLogin: async function (req, res) {
         try {
-            passport.authenticate('local')(req, res, function () {
-                res.redirect('/');
+            const db = await passport.authenticate('local')(req, res, function () {
+                res.json(db)
             })
         }
-        catch (error) { console.log(error) }
+        catch (error) { res.status(422).json(error) }
     },
     //To log out:
     logout: function (req, res) {

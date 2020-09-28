@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { Link } from 'react-router-dom'
 import Container from "../Components/Container"
 import Column from "../Components/Column"
@@ -14,6 +14,7 @@ import List from "../Components/ListGroup"
 import ListItem from "../Components/ListItem"
 import GoogleBooksAPI from "../utils/GoogleBooksAPI";
 import BooksDB from "../utils/DB"
+import { UserContext } from "../Context/userContext";
 
 
 function BookSearch() {
@@ -22,6 +23,9 @@ function BookSearch() {
 
     //Set state for search results from Google Books API
     const [searchResults, setSearchResults] = useState([])
+
+    //Context to set state for logged in user details:
+    const { user } = useContext(UserContext)
 
     //When user searches for a book, make API call and set results into 'searchResults' state
     const handleInput = async (event) => {
@@ -57,7 +61,7 @@ function BookSearch() {
     return <Container>
         <Heading />
         <Card>
-            <Title>Book Search:</Title>
+            <Title>Welcome {user.username}! Search for your next book:</Title>
             <Form onSubmit={e => handleInput(e)}>
                 <Input placeholder={"Enter the book you want to search for"} onChange={e => setSearch(e.target.value)} />
                 <Button variant={"dark"} type={"submit"} onClick={handleInput}>Search</Button>

@@ -14,6 +14,10 @@ export default {
         return axios.post("/api/books", bookData);
     },
 
+    getUser: function () {
+        return axios.get("/api/user_data")
+    },
+
     register: function ({ name, username, password }) {
         return axios.post("/register", {
             name: name,
